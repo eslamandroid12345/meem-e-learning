@@ -444,4 +444,10 @@ return [
     'courses_selected' => 'حدد دورة',
     'go_to_question' => 'الذهاب الي السؤال',
     'solution_video_platform' => ' نوع المنصه',
+    'Total Count' => 'العدد الإجمالي',
+    'Electronic Count' => 'عدد الدفع الإلكتروني',
+    'Bank Transfer Count' => 'عدد التحويل البنكي',
+    'Tamara Count' => 'عدد تمارا',
+    'Payers Count' => 'عدد اللذين قاموا بالدفع',
+    'tamara' => 'تمارا',
 ];

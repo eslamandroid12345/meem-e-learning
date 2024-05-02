@@ -6,6 +6,8 @@ use App\Http\Requests\Api\Payment\PaymentRequest;
 use App\Http\Requests\Payment\PaymentCallbackRequest;
 use App\Http\Services\Mutual\FileManagerService;
 use App\Http\Traits\Responser;
+use App\Models\Course;
+use App\Models\CourseBook;
 use App\Repository\BookUserRepositoryInterface;
 use App\Repository\CartRepositoryInterface;
 use App\Repository\CertificateUserRepositoryInterface;
@@ -35,15 +37,15 @@ abstract class PaymentService
     protected FileManagerService $fileManager;
 
     public function __construct(
-        PaymentRepositoryInterface      $paymentRepository,
-        CartRepositoryInterface         $cartRepository,
-        CourseRepositoryInterface       $courseRepository,
-        CourseUserRepositoryInterface   $courseUserRepository,
-        BookUserRepositoryInterface     $bookUserRepository,
-        PrintRequestRepositoryInterface $printRequestRepository,
+        PaymentRepositoryInterface         $paymentRepository,
+        CartRepositoryInterface            $cartRepository,
+        CourseRepositoryInterface          $courseRepository,
+        CourseUserRepositoryInterface      $courseUserRepository,
+        BookUserRepositoryInterface        $bookUserRepository,
+        PrintRequestRepositoryInterface    $printRequestRepository,
         CertificateUserRepositoryInterface $certificateUserRepository,
-        PaymentAssignService            $assignService,
-        FileManagerService              $fileManagerService,
+        PaymentAssignService               $assignService,
+        FileManagerService                 $fileManagerService,
     )
     {
         $this->paymentRepository = $paymentRepository;
@@ -64,7 +66,7 @@ abstract class PaymentService
             'accept' => 'application/json',
         ])->get("https://api.tap.company/v2/charges/{$request->tap_id}")->json();
 
-        Log::info('payment::: '. print_r($response, true));
+        Log::info('payment::: ' . print_r($response, true));
 
         if (isset($response['metadata'])) {
             $payment = $this->paymentRepository->getById($response['metadata']['udf3']);
@@ -93,7 +95,8 @@ abstract class PaymentService
         }
     }
 
-    public function ePaymentWebhook(Request $request) {
+    public function ePaymentWebhook(Request $request)
+    {
         Log::info('webhook started');
         $payment = $this->paymentRepository->getById($request->metadata['udf3']);
 
@@ -112,9 +115,161 @@ abstract class PaymentService
         }
     }
 
+    public function tamaraPayment($payment, $certificate_user_id = null, $instalments = 3)
+    {
+        $items = [];
+
+        if ($payment->payable_type == $this->payable['cart']['type']) {
+            foreach ($payment->payable->items as $item) {
+                if ($item->cartable_type == Course::class) {
+                    $items[] = [
+                        'name' => __('dashboard.course') . ': ' . $item->cartable->t('name'),
+                        'quantity' => 1,
+                        'reference_id' => $item->id,
+                        'type' => 'Digital',
+                        'sku' => 'SA-12437',
+                        'total_amount' => [
+                            'amount' => $item->cartable->price,
+                            'currency' => 'SAR'
+                        ]
+                    ];
+                } elseif ($item->cartable_type == CourseBook::class) {
+                    if ($item->option == 'PDF') {
+                        $items[] = [
+                            'name' => __('dashboard.courseBook') . ': ' . $item->cartable->t('name'),
+                            'quantity' => 1,
+                            'reference_id' => $item->id,
+                            'type' => 'Digital',
+                            'sku' => 'SA-12437',
+                            'total_amount' => [
+                                'amount' => $item->cartable->price,
+                                'currency' => 'SAR'
+                            ]
+                        ];
+                    } elseif ($item->option == 'PRINT') {
+                        $items[] = [
+                            'name' => __('dashboard.printRequest') . ': ' . $item->cartable->t('name'),
+                            'quantity' => $item->quantity,
+                            'reference_id' => $item->id,
+                            'type' => 'Physical',
+                            'sku' => 'SA-12437',
+                            'total_amount' => [
+                                'amount' => $item->cartable->price,
+                                'currency' => 'SAR'
+                            ]
+                        ];
+                    }
+                }
+            }
+        } elseif ($payment->payable_type == $this->payable['certificate_user']['type']) {
+            $certificate = $this->certificateUserRepository->getById($certificate_user_id);
+
+            $items[] = [
+                'name' => __('dashboard.Certificate of Course') . ': ' . $certificate->course->t('name'),
+                'quantity' => 1,
+                'reference_id' => $certificate->id,
+                'type' => 'Physical',
+                'sku' => 'SA-12437',
+                'total_amount' => [
+                    'amount' => $certificate->course->certificate_price,
+                    'currency' => 'SAR'
+                ]
+            ];
+        }
+
+        $response = Http::withHeaders([
+            'Content-Type' => 'application/json',
+            'Accept' => 'application/json',
+            'Authorization' => 'Bearer ' . env('TAMARA_PAYMENT_KEY'),
+        ])->post('https://api.tamara.co/checkout', [
+            'total_amount' => [
+                'amount' => $payment->amount,
+                'currency' => 'SAR'
+            ],
+            'shipping_amount' => [
+                'amount' => 0,
+                'currency' => 'SAR'
+            ],
+            'tax_amount' => [
+                'amount' => 0,
+                'currency' => 'SAR'
+            ],
+            'order_reference_id' => $payment->id,
+            'order_number' => $certificate_user_id ?? 'N/A',
+            'items' => $items,
+            'consumer' => [
+                'email' => auth('api')->user()->email,
+                'first_name' => auth('api')->user()->name,
+                'last_name' => ' ',
+                'phone_number' => auth('api')->user()->phone
+            ],
+            'country_code' => 'SA',
+            'description' => 'منصة ميم التعليمية',
+            'merchant_url' => [
+                'cancel' => 'https://meem-sa.com/tamara-pay-result/cancel',
+                'failure' => 'https://meem-sa.com/tamara-pay-result/failure',
+                'success' => 'https://meem-sa.com/tamara-pay-result/success',
+                'notification' => route('w.tamara.payment.notification')
+            ],
+            'payment_type' => 'PAY_BY_INSTALMENTS',
+            'instalments' => (integer) $instalments,
+            'shipping_address' => [
+                'first_name' => auth('api')->user()->name,
+                'last_name' => '(Student)',
+                'line1' => 'N/A',
+                'city' => 'N/A',
+                'country_code' => 'SA'
+            ],
+        ])->json();
+
+        if (isset($response['checkout_url'])) {
+
+            DB::commit();
+
+            return $this->responseSuccess(data: ['redirect_url' => $response['checkout_url']]);
+
+        } else {
+            $this->paymentRepository->delete($payment->id);
+
+            DB::commit();
+            return $this->responseFail(data: __('messages.An error occurred while processing the payment'));
+        }
+    }
+
     public function tamaraNotification(Request $request)
     {
-        Log::info(print_r($request, true));
-        return true;
+        if ($request->order_id !== null && $request->order_status == 'approved') {
+
+            $response = Http::withHeaders([
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json',
+                'Authorization' => 'Bearer ' . env('TAMARA_PAYMENT_KEY'),
+            ])->post('https://api.tamara.co/orders/' . $request->order_id . '/authorise')->json();
+
+            $tamaraOrder = Http::withHeaders([
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json',
+                'Authorization' => 'Bearer ' . env('TAMARA_PAYMENT_KEY'),
+            ])->get('https://api.tamara.co/orders/' . $request->order_id)->json();
+
+            $payment = $this->paymentRepository->getById($tamaraOrder['order_reference_id']);
+
+            Log::info('tamara notification: ' . print_r($tamaraOrder, true));
+
+            if ($response['order_id'] !== null && ($response['status'] == 'authorised' || $response['status'] == 'fully_captured')) {
+                $certificate_user_id = $request->order_number !== 'N/A' ? $request->order_number : null;
+                $this->assign->handle($payment, $certificate_user_id, true);
+
+                $this->paymentRepository->update($payment->id, ['is_confirmed' => true, 'is_declined' => false]);
+
+                return true;
+            } else {
+                $this->paymentRepository->update($payment->id, ['is_declined' => true, 'is_confirmed' => false]);
+                return false;
+            }
+        } else {
+            return false;
+        }
+
     }
 }

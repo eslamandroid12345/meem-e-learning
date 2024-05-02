@@ -404,7 +404,7 @@
                                 <a href="{{ url('payments') }}" class="btn btn-dark">@lang('dashboard.back')</a>
 
                             @endif
-                        
+
                     </div>
                 </div>
                 @if($payment->payable_type == "App\Models\Cart")
@@ -428,8 +428,8 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    @if(isset($payment->payable()->withTrashed()->first()?->items))
-                                        @forelse($payment->payable()->withTrashed()->first()?->items as $key => $item)
+                                    @if($payment->payable()->withTrashed()->first()?->items()->withTrashed()->get() !== null)
+                                        @forelse($payment->payable()->withTrashed()->first()?->items()->withTrashed()->get() as $key => $item)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>

@@ -52,6 +52,7 @@ class CategoryService
         }
     }
 
+
     public function delete($id) {
         $category = $this->categoryRepository->getById($id);
         if (Gate::allows('delete-category', $category)) {

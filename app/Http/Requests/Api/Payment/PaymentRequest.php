@@ -97,6 +97,8 @@ class PaymentRequest extends FormRequest
             $rules['transfer_time'] = 'required|max:255';
         } elseif($this->input('type') == 'EPAYMENT') {
             $rules['token'] = [Rule::requiredIf(request()->is('api/w/*') || request()->is('w/*')), 'exclude'];
+        } elseif ($this->input('type') == 'TAMARA') {
+            $rules['instalments'] = [Rule::requiredIf(request()->is('api/w/*') || request()->is('w/*')), 'exclude', Rule::in([2, 3, 4])];
         }
 
         return $rules;

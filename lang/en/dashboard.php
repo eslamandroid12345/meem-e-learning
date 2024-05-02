@@ -436,7 +436,10 @@ return [
     'courses_selected' => 'Selected Course',
     'go_to_question' => 'go to question',
     'solution_video_platform' => ' solution video platform',
-
-
-
+    'Total Count' => 'Total Count',
+    'Electronic Count' => 'Electronic Count',
+    'Bank Transfer Count' => 'Bank Transfer Count',
+    'Tamara Count' => 'Tamara Count',
+    'Payers Count' => 'Payers Count',
+    'tamara' => 'Tamara',
 ];

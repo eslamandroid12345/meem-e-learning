@@ -130,6 +130,17 @@ abstract class Repository implements RepositoryInterface
         return $model->delete();
     }
 
+    public function forceDelete($modelId, array $filesFields = []): bool
+    {
+        $model = $this->getById($modelId);
+        foreach ($filesFields as $field) {
+            if ($model->$field !== null) {
+                $this->deleteFile($model->$field);
+            }
+        }
+        return $model->forceDelete();
+    }
+
     public function paginate(int $perPage = 10, array $relations = [] , $orderBy = 'ASC' , $columns = ['*'], Closure $addition = null , Closure $filters = null)
     {
         return $this->model::query()->select($columns)->with($relations)->orderBy('id' , $orderBy)->where(function ($query) use ($addition , $filters) {

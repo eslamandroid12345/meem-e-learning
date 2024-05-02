@@ -62,7 +62,8 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         Gate::define('delete-exam' , function ($user , $exam){
-            return !$exam->users()?->exists();
+//            return !$exam->users()?->exists();
+            return true;
         });
 
         Gate::define('edit-exam-type', function ($user, $exam) {

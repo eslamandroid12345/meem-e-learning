@@ -55,7 +55,10 @@
                                             @endforeach
                                         </select>
                                     </div>
-
+                                    <div class="form-group col-6">
+                                        <label for="exampleInputName1">@lang('dashboard.sort')</label>
+                                        <input name="sort" type="number" min="1" step="1" class="form-control" id="exampleInputName1">
+                                    </div>
                                     <div class="form-group clearfix col-12">
                                         <div class="icheck-wetasphalt d-inline">
                                             <input name="is_active" type="checkbox" id="checkboxPrimary3" checked="">

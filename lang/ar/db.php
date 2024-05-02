@@ -25,6 +25,7 @@ return [
     'payment_type' => [
         'CASH' => 'تحويل بنكي',
         'EPAYMENT' => 'دفع إلكتروني',
+        'TAMARA' => 'تمارا',
     ],
     'payment_buy_type' => [
         'CART' => 'عربة تسوق',

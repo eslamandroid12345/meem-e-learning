@@ -25,6 +25,7 @@ return [
     'payment_type' => [
         'CASH' => 'Cash',
         'EPAYMENT' => 'E-Payment',
+        'TAMARA' => 'Tamara',
     ],
     'payment_buy_type' => [
         'CART' => 'Cart',

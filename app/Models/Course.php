@@ -292,10 +292,12 @@ class Course extends Model
         return ceil(($watched / $allLectures) * 100);
     }
 
-    public function PaymentsCount($type)
+    public function paymentsCount($type = null)
     {
         return $this->subscriptions()->whereHas('payment', function ($q) use ($type) {
-            $q->where('payment_type', $type);
+            if ($type !== null) {
+                $q->where('payment_type', $type);
+            }
         })->count();
     }
 

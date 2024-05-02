@@ -30,6 +30,7 @@ class CategoryRequest extends FormRequest
             'is_active' => 'nullable',
             'image' => 'nullable|exclude|image|mimes:jpg,jpeg,png|max:2048',
             'field_id' => ['required' , Rule::exists('fields' , 'id')],
+            'sort' => 'required|integer|gte:1',
         ];
     }
 }

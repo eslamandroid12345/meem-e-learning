@@ -89,7 +89,7 @@
 <div class="wrapper">
     <img
         class="logo"
-        src="https://meemedu.com/_nuxt/img/meem.f868324.png"
+        src="https://meem-sa.com/_nuxt/img/meem.f868324.png"
         alt="logo"
     />
     <div class="container">
@@ -110,10 +110,10 @@
         </ul>
     </div>
     <ul>
-        <li><a href="https://meemedu.com/faqs/">الأسئلة الشائعة</a></li>
-        <li><a href="https://meemedu.com/about/">عن المنصة</a></li>
-        <li><a href="https://meemedu.com/privacy-policy/">سياسة الخصوصية</a></li>
-        <li><a href="https://meemedu.com/terms-conditions/">الشروط والأحكام</a></li>
+        <li><a href="https://meem-sa.com/faqs/">الأسئلة الشائعة</a></li>
+        <li><a href="https://meem-sa.com/about/">عن المنصة</a></li>
+        <li><a href="https://meem-sa.com/privacy-policy/">سياسة الخصوصية</a></li>
+        <li><a href="https://meem-sa.com/terms-conditions/">الشروط والأحكام</a></li>
     </ul>
 </div>
 </body>

@@ -48,4 +48,6 @@ interface RepositoryInterface
     public function paginate(int $perPage = 10, array $relations = [] , $orderBy = 'ASC' , $columns = ['*'], Closure $addition = null , Closure $filters = null);
 
     public function whereHasMorph($relation, $class);
+
+    public function forceDelete($modelId, array $filesFields = []): bool;
 }

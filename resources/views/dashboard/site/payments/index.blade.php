@@ -72,6 +72,8 @@
                                                 @selected(request('payment_type') == "CASH")  value="CASH">@lang('dashboard.bankPayment')</option>
                                             <option
                                                 @selected(request('payment_type') == "EPAYMENT") value="EPAYMENT">@lang('dashboard.ePayment')</option>
+                                            <option
+                                                @selected(request('payment_type') == "TAMARA") value="TAMARA">@lang('dashboard.tamara')</option>
                                         </select>
                                     </div>
                                     <div class="form-group col-2">
@@ -121,10 +123,10 @@
                                         <td>{{$payment->user?->name}}</td>
                                         <td>
                                             @if($payment->payable_type == Cart::class)
-                                                @if($payment->payable()->withTrashed()->first()?->items?->count() == 1)
-                                                    @lang('db.cart_item_type.' . $payment->payable()->withTrashed()->first()?->items?->first()->cartable_type)
-                                                    : {{ $payment->payable()->withTrashed()->first()?->items?->first()?->cartable?->t('name') }}
-                                                @elseif($payment->payable()->withTrashed()->first()?->items?->count() == 0)
+                                                @if($payment->payable()->withTrashed()->first()?->items()->withTrashed()?->count() == 1)
+                                                    @lang('db.cart_item_type.' . $payment->payable()->withTrashed()->first()?->items()->withTrashed()?->first()->cartable_type)
+                                                    : {{ $payment->payable()->withTrashed()->first()?->items()->withTrashed()?->first()?->cartable?->t('name') }}
+                                                @elseif($payment->payable()->withTrashed()->first()?->items()->withTrashed()?->count() == 0)
                                                     @lang('dashboard.none')
                                                 @else
                                                     @lang('dashboard.Multi')

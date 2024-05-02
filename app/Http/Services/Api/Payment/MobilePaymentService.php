@@ -59,6 +59,8 @@ class MobilePaymentService extends PaymentService
                         'email' => auth('api')->user()->email,
                     ],
                 ]);
+            } elseif ($data['type'] == 'TAMARA') {
+                return $this->tamaraPayment($payment, $request->certificate_user_id, $request->instalments);
             } else {
                 $this->assign->handle($payment, $request->certificate_user_id);
                 DB::commit();

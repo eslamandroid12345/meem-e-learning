@@ -235,8 +235,8 @@
                                     <div class="form-group clearfix col-3">
                                         <input name="important_flag" type="hidden" value="off">
                                         <div class="icheck-wetasphalt d-inline">
-                                            <input name="important_flag" type="checkbox" id="checkboxPrimary4" @checked($course->important_flag == 1)>
-                                            <label for="checkboxPrimary4">@lang('dashboard.important_flag')</label>
+                                            <input name="important_flag" type="checkbox" id="checkboxPrimary8" @checked($course->important_flag == 1)>
+                                            <label for="checkboxPrimary8">@lang('dashboard.important_flag')</label>
                                         </div>
                                     </div>
                                 </div>

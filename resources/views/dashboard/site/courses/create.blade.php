@@ -224,8 +224,8 @@
 
                                     <div class="form-group clearfix col-3">
                                         <div class="icheck-wetasphalt d-inline">
-                                            <input name="important_flag" type="checkbox" id="checkboxPrimary2" checked="">
-                                            <label for="checkboxPrimary2">@lang('dashboard.important_flag')</label>
+                                            <input name="important_flag" type="checkbox" id="checkboxPrimary15" checked="">
+                                            <label for="checkboxPrimary15">@lang('dashboard.important_flag')</label>
                                         </div>
                                     </div>
                                 </div>

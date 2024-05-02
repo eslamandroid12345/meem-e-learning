@@ -17,7 +17,7 @@ class FieldResource extends JsonResource
             'image' => $this->image,
             'color_code' =>  $this->color_code,
             'show_department' => $this->show_department,
-            'categories' => CategoryResource::collection($this->categories),
+            'categories' => CategoryResource::collection($this->activeCategories),
             'common_questions' => $this->common_questions ? CourseCommonQuestionsResource::collection($this->common_questions) : []
         ];
     }

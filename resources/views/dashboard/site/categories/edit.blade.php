@@ -66,7 +66,10 @@
                                             @endforeach
                                         </select>
                                     </div>
-
+                                    <div class="form-group col-6">
+                                        <label for="exampleInputName1">@lang('dashboard.sort')</label>
+                                        <input name="sort" type="number" class="form-control" id="exampleInputName1" value="{{old('sort') ?? $category['sort']}}">
+                                    </div>
                                     <div class="form-group clearfix col-12">
                                         <input name="is_active" type="hidden" value="off">
                                         <div class="icheck-wetasphalt d-inline">

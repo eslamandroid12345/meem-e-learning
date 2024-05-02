@@ -49,7 +49,7 @@ abstract class CartService
         $this->get = $getService;
     }
 
-    private function provide() 
+    private function provide()
     {
         return $this->cartRepository->provide();
     }
@@ -118,11 +118,11 @@ abstract class CartService
         $cart = $this->provide();
         $data = $request->validated();
         if (Gate::allows('remove-from-cart', [$cart, $data['cart_item_id']])) {
-            $this->cartContentRepository->delete($data['cart_item_id']);
+            $this->cartContentRepository->forceDelete($data['cart_item_id']);
             return $this->responseSuccess(message: __('messages.Item removed from cart successfully'));
         } else {
             return $this->responseFail(status: 401, message: __('messages.Cannot remove this item from cart'));
         }
     }
-  
+
 }

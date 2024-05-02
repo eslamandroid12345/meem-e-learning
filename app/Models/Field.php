@@ -18,6 +18,11 @@ class Field extends Model
         return $this->hasMany(Category::class);
     }
 
+    public function activeCategories()
+    {
+        return $this->categories()->where('is_active', true);
+    }
+
     public function image() : Attribute {
         return Attribute::make(
             get: function ($value) {

@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->enum('payment_type', ['CASH', 'EPAYMENT']);
+            $table->enum('payment_type', ['CASH', 'EPAYMENT', 'TAMARA']);
             $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete()->cascadeOnUpdate();
             $table->foreignId('cart_id')->nullable()->constrained('carts')->nullOnDelete()->cascadeOnUpdate();
             $table->float('amount')->unsigned();

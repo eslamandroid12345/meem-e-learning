@@ -11,6 +11,7 @@ use App\Repository\Eloquent\CourseBookRepository;
 use App\Repository\FieldRepositoryInterface;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 
 class CourseService
 {
@@ -51,6 +52,7 @@ class CourseService
         }catch (\Exception $e){
 
 //            dd($e);
+            Log::info('courses create error::: ' . $e->getMessage());
             DB::rollBack();
             return back()->with(['error' => __('messages.Something went wrong')]);
         }
@@ -58,11 +60,11 @@ class CourseService
 
     private function storeCourse($data){
         $data['is_active'] = isset($data['is_active']) && $data['is_active'] == 'on';
-        $data['important_flag'] = $data['important_flag'] == 'on';
-        $data['is_ratable'] = $data['is_ratable'] == 'on';
-        $data['request_certificate_available'] = $data['request_certificate_available'] == 'on';
-        $data['registration_status'] = $data['registration_status'] == 'on';
-        $data['notcontinue'] = $data['notcontinue'];
+        $data['important_flag'] = isset($data['important_flag']) && $data['important_flag'] == 'on';
+        $data['is_ratable'] = isset($data['is_ratable']) && $data['is_ratable'] == 'on';
+        $data['request_certificate_available'] = isset($data['request_certificate_available']) && $data['request_certificate_available'] == 'on';
+        $data['registration_status'] = isset($data['registration_status']) && $data['registration_status'] == 'on';
+        $data['notcontinue'] = isset($data['notcontinue']) && $data['notcontinue'];
 
         if(isset($data['image'])){
             $data['image'] = $this->fileManager->handle('image', 'courses');

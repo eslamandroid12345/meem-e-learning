@@ -34,7 +34,7 @@ class PaymentRepository extends Repository implements PaymentRepositoryInterface
 
                          $query->whereHasMorph('payable' , Cart::class , function (Builder $query){
                              $query->withTrashed()->whereHas('items' , function ($query){
-                                 $query->where('cartable_type' , Course::class);
+                                 $query->where('cartable_type' , Course::class)->withTrashed();
                              });
                          });
 
@@ -42,13 +42,13 @@ class PaymentRepository extends Repository implements PaymentRepositoryInterface
 
                          $query->whereHasMorph('payable' , Cart::class , function (Builder $query){
                              $query->withTrashed()->whereHas('items' , function ($query){
-                                 $query->where('cartable_type' , Course::class)->where('cartable_id',request('course_id'));
+                                 $query->where('cartable_type' , Course::class)->where('cartable_id',request('course_id'))->withTrashed();
                              });
                          });
                      } else{
                          $query->whereHasMorph('payable' , Cart::class , function (Builder $query){
                              $query->withTrashed()->whereHas('items' , function ($query){
-                                 $query->where('cartable_type' , CourseBook::class);
+                                 $query->where('cartable_type' , CourseBook::class)->withTrashed();
                              });
                          });
                      }
@@ -91,13 +91,13 @@ class PaymentRepository extends Repository implements PaymentRepositoryInterface
                     if (request('type') == "COURSE"){
                         $query->whereHasMorph('payable' , Cart::class , function (Builder $query){
                             $query->withTrashed()->whereHas('items' , function ($query){
-                                $query->where('cartable_type' , Course::class);
+                                $query->where('cartable_type' , Course::class)->withTrashed();
                             });
                         });
                     }else{
                         $query->whereHasMorph('payable' , Cart::class , function (Builder $query){
                             $query->withTrashed()->whereHas('items' , function ($query){
-                                $query->where('cartable_type' , CourseBook::class);
+                                $query->where('cartable_type' , CourseBook::class)->withTrashed();
                             });
                         });
                     }
