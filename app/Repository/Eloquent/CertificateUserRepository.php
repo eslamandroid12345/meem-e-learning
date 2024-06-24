@@ -31,4 +31,20 @@ class CertificateUserRepository extends Repository implements CertificateUserRep
             ]
         );
     }
+
+    public function checkCourseCertificateUserAccepted($course_id){
+        return $this->model::query()
+            ->where('user_id',auth('api')->id())
+            ->where('course_id',$course_id)
+            ->where('is_active',1)
+            ->count();
+    }
+
+    public function checkCourseCertificateUserPending($course_id){
+        return $this->model::query()
+            ->where('user_id',auth('api')->id())
+            ->where('course_id',$course_id)
+            ->where('is_active',0)
+            ->count();
+    }
 }

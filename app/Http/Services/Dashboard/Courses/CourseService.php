@@ -38,6 +38,7 @@ class CourseService
         $notcontinue = $request->notcontinue ? 1 : 0;
         $courseData = $request->except('books' , 'attachments' , 'teachers' , 'certificate_available');
         $courseData['app_price'] =  $courseData['app_price'] == null ? $courseData['price'] : $courseData['app_price'];
+        $courseData['certificate_price'] = $request['certificate_price'] ?? 0;
         $courseData = array_merge($courseData,['notcontinue' => $notcontinue]);
         DB::beginTransaction();
         try {

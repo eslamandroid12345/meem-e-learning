@@ -34,14 +34,27 @@ abstract class CertificateService
     }
 
     public function request(CertificateRequest $request) {
+
         $data = $request->validated();
         $course = $this->courseRepository->getById($data['course_id']);
         if (Gate::allows('request-certificate', $course)) {
             DB::beginTransaction();
             try {
+
+                if($this->certificateUserRepository->checkCourseCertificateUserAccepted($course->id) > 0){
+                    $status = 201;
+                    $message = __('messages.certificate_user_accepted');
+                }elseif ($this->certificateUserRepository->checkCourseCertificateUserPending($course->id) > 0){
+                    $status = 201;
+                    $message = __('messages.certificate_user_pending');
+                }else{
+
+                    $status = 200;
+                    $message =  __('messages.certificate_user_complete_request');
+                }
                 $certificate = $this->certificateUserRepository->provide($data['course_id']);
                 DB::commit();
-                return $this->responseSuccess(data: [
+                return $this->responseSuccess(status: $status, message: $message, data: [
                     'certificate_user_id' => $certificate->id,
                 ]);
             } catch (Exception $e) {

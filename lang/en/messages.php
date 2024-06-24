@@ -127,4 +127,10 @@ return [
     'send_code_successfully' => 'Send Code Successfully',
     'An error occurred while processing the payment' => 'An error occurred while processing the payment.',
     'Payment failed because' => 'Payment failed because: :cause',
+
+
+    'certificate_user_accepted' => 'Certificate request has been accepted before',
+    'certificate_user_pending' => 'Certificate request is under review',
+    'certificate_user_complete_request' => 'Please complete the certificate request steps',
+
 ];

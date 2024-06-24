@@ -100,13 +100,11 @@
                         dataType: "json",
                         data: {
                             "course_id": course_id,
-
                         },
 
                         success: function (data) {
 
                             $('#questions').empty();
-
                             $.each(data, function (key, value) {
                                 var html = `
                                     <div class="form-group clearfix col-12" id="checkboxContainer${key}">

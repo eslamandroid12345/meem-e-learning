@@ -61,7 +61,7 @@ abstract class CartService
 
     private function addDecide($data, $cart, $itemId, $itemType, $option)
     {
-        if ($cart->items()?->where('cartable_id', $itemId)->where('cartable_type', $itemType)->where('option', $option)->exists()) {
+        if ($cart->items()->where('cartable_id', $itemId)->where('cartable_type', $itemType)->where('option', $option)->exists()) {
             return $this->responseFail(message: __('messages.Item is already in cart', ['type' => __('dashboard.' . $data['item_type'])]));
         }
 
@@ -79,17 +79,12 @@ abstract class CartService
 
         if (
             $itemType == Course::class &&
-
-            auth('api')->user()->cart()?->withTrashed()->where(function ($query) use ($itemId) {
-                $query->whereHas('items', function ($query) use ($itemId) {
-                    $query->where('cartable_type', Course::class);
-                    $query->where('cartable_id', $itemId);
-                });
-            })->where(function ($query) {
-                $query->whereHas('payment', function ($query) {
-                    $query->where('is_confirmed', false);
-                    $query->where('is_declined', false);
-                });
+            auth('api')->user()->cart()->withTrashed()->whereHas('items', function ($query) use ($itemId) {
+                $query->where('cartable_type', Course::class)
+                    ->where('cartable_id', $itemId);
+            })->whereHas('payment', function ($query) {
+                $query->where('is_confirmed', false)
+                    ->where('is_declined', false);
             })->exists()
         ) {
             return $this->responseFail(message: __('messages.This item is on a previous payment that is being reviewed', ['type' => __('dashboard.' . $data['item_type'])]));
@@ -124,5 +119,4 @@ abstract class CartService
             return $this->responseFail(status: 401, message: __('messages.Cannot remove this item from cart'));
         }
     }
-
 }

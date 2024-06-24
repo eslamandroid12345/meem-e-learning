@@ -132,4 +132,9 @@ return [
     'send_code_successfully' => 'تم إرسال الكود بنجاح',
     'An error occurred while processing the payment' => 'حدث خطأ أثناء معالجة عملية الدفع',
     'Payment failed because' => 'فشلت عملية الدفع بسبب الآتي: :cause',
+
+    'certificate_user_accepted' => 'تم قبول طلب الشهادة من قبل',
+    'certificate_user_pending' => 'طلب الشهادة قيد المراجعة',
+    'certificate_user_complete_request' => 'يرجي اكمال خطوات طلب الشهادة',
+    
 ];

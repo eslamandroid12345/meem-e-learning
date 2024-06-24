@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 abstract class AuthService{
+    
     use Responser;
 
     protected UserRepositoryInterface $userRepository;
@@ -42,8 +43,8 @@ abstract class AuthService{
                     DeviceToken::updateOrCreate(
                                                     ['token' => $request->fcm_token],
                                                     ['user_id' => auth('api')->id()],
-                                                ); 
-                }   
+                                                );
+                }
             return $this->responseSuccess(message: __('messages.Successfully authenticated'), data: new UserResource(auth('api')->user()));
         }
         return $this->responseFail(status: 401, message: __('messages.wrong credentials'));

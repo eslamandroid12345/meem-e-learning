@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Services\Dashboard\DeviceToken;
 use App\Http\Mail\SendReply;
+use App\Jobs\SendFirebaseNotification;
 use App\Models\Contact;
 use App\Models\Course;
 use App\Models\User;
@@ -16,12 +17,12 @@ class DeviceTokenService
 {
     use NotificationManager;
     private DeviceTokenRepositoryInterface $devicetokenRepository;
-    private NotificationRepositoryInterface $notificationRepository;
-    
-    public function __construct(DeviceTokenRepositoryInterface $devicetokenRepository,NotificationRepositoryInterface $notificationRepository)
+//    private NotificationRepositoryInterface $notificationRepository;
+
+    public function __construct(DeviceTokenRepositoryInterface $devicetokenRepository)
     {
         $this->devicetokenRepository = $devicetokenRepository;
-        $this->notificationRepository = $notificationRepository;
+//        $this->notificationRepository = $notificationRepository;
     }
 
     public function edit()
@@ -55,21 +56,14 @@ class DeviceTokenService
         DB::beginTransaction();
         try
         {
-            $users = User::whereDoesntHave('courses',function($query) use ($request){
-                if($request->course_id != null)
-                {
-                    $query->where('courses.id',$request->course_id);
-                }
-            })->pluck('id')->toArray();
-            $usersIds = User::whereDoesntHave('courses',function($query) use ($request){
-                if($request->course_id != null)
-                {
-                    $query->where('courses.id',$request->course_id);
-                }
-            })->whereHas('devicetokens')->pluck('id')->toArray();
-            // dd($users);
-            $devicetokens = DeviceToken::whereIn('user_id',$users)->pluck('token')->toArray();
-            $this->notify($devicetokens,$request->title,$request->content,$usersIds,$request->course_id != null ? 'course':null,$request->course_id != null ? $request->course_id:null);
+
+            SendFirebaseNotification::dispatch(
+                $request->title,
+                $request->content,
+                $request->course_id != null ? 'course' : null,
+                $request->course_id != null ? $request->course_id : null
+            );
+
             DB::commit();
             return redirect()->back()->with(['success' => __('messages.updated successfully')]);
         }

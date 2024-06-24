@@ -29,7 +29,7 @@ class CourseExamsByTypeResource extends JsonResource
             'is_restartable' => Gate::allows('start-exam', $this),
             'solution_video_platform' => $this->solution_video_platform,
             'solution_video_link' => $this->solution_video_link,
-            'exam_user' => $examUser->exists()
+            'exam_user' => $examUser?->exists()
                 ? [
                     'id' => $examUser?->first()->pivot->id,
                     'date' => Carbon::parse($examUser->first()->pivot->created_at)->translatedFormat('d F Y  h:iA'),

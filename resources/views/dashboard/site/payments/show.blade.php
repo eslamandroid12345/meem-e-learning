@@ -264,6 +264,9 @@
                                             </tr>
                                         @endif
 
+
+
+
                                         <tr>
                                             <th>@lang('dashboard.Payment Type')</th>
                                             <td style="width: 66%">@lang('db.payment_type.'.$payment->payment_type)</td>
@@ -291,6 +294,8 @@
                                                 <td style="width: 66%">{{ $payment->payable()?->withTrashed()?->coupon()?->withTrashed()?->first()->coupon->coupon ?? '-' }}</td>
                                             </tr>
                                         @endif
+
+
                                         @if($payment->bank_account_name)
                                             <tr>
                                                 <th>@lang('dashboard.bank_account_name')</th>
