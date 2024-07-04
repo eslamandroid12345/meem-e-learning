@@ -25,3 +25,9 @@ Some screen from mobile app and web app and dashboard
 ![courses2](https://github.com/eslamandroid12345/meem-e-learning/assets/96002614/8b681844-fbe8-4360-98a4-7eb884ca1141)
 
 ![tabs](https://github.com/eslamandroid12345/meem-e-learning/assets/96002614/2718e0be-d3ed-4ed7-9762-6403d43538c3)
+
+![book_store](https://github.com/eslamandroid12345/meem-e-learning/assets/96002614/4bca9715-2acd-478c-babd-cd797efc0ec7)
+
+![course_detail_app](https://github.com/eslamandroid12345/meem-e-learning/assets/96002614/c77ca247-7c1e-47eb-bce4-87b6eeb67da1)
+
+
